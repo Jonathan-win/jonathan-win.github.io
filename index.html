@@ -45,16 +45,17 @@ body.abierto .rayos{opacity:1}
 @keyframes flotar{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(8deg)}}
 
 /* ---------- PORTADA ---------- */
-#portada{position:fixed;inset:0;z-index:50;background:var(--crema);overflow:hidden;display:flex;justify-content:center;
+#portada{position:fixed;inset:0;z-index:50;background:var(--crema);overflow-x:hidden;overflow-y:auto;display:flex;justify-content:center;
   transition:opacity .9s ease, visibility .9s}
 #portada.fuera{opacity:0;visibility:hidden}
-.portada-in{position:relative;width:100%;max-width:440px;height:100%;min-height:640px;padding:calc(env(safe-area-inset-top,0px) + 4vh) 20px 0}
-.p-top{display:flex;align-items:center;justify-content:center;gap:6px;animation:entrar 1s .2s both}
-.p-top img{width:34%;max-width:150px;filter:drop-shadow(0 6px 10px rgba(237,91,18,.25))}
-.logo{font-family:var(--f-logo);color:var(--naranja);font-size:clamp(52px,16vw,72px);line-height:.95;text-align:center;letter-spacing:.02em;
+.portada-in{position:relative;width:100%;max-width:440px;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;gap:1vh;
+  padding:calc(env(safe-area-inset-top,0px) + 2vh) 20px calc(env(safe-area-inset-bottom,0px) + 1vh)}
+.p-top{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;animation:entrar 1s .2s both}
+.p-top img{width:34%;max-width:min(150px,19vh);filter:drop-shadow(0 6px 10px rgba(237,91,18,.25))}
+.logo{font-family:var(--f-logo);color:var(--naranja);font-size:clamp(40px,min(16vw,8.5vh),72px);line-height:.95;text-align:center;letter-spacing:.02em;
   -webkit-text-stroke:2px #111;paint-order:stroke fill;text-shadow:4px 4px 0 #111}
-.p-nombre{font-family:var(--f-cursiva);color:var(--naranja);font-size:clamp(54px,16vw,72px);text-align:center;line-height:1.1;margin:2vh 0 1vh;animation:entrar 1s .5s both}
-.sobre-wrap{position:relative;perspective:900px;animation:entrar 1s .8s both}
+.p-nombre{font-family:var(--f-cursiva);color:var(--naranja);font-size:clamp(40px,min(15vw,8.5vh),72px);text-align:center;line-height:1.1;animation:entrar 1s .5s both}
+.sobre-wrap{position:relative;width:min(100%,50vh);perspective:900px;animation:entrar 1s .8s both}
 .sobre{position:relative;display:block;width:100%;aspect-ratio:1.55;cursor:pointer;border-radius:6px;
   background:linear-gradient(180deg,#b9420a,#d9560f);box-shadow:0 18px 30px -12px rgba(132,79,35,.55),0 2px 0 rgba(0,0,0,.08)}
 .bolsillo{position:absolute;inset:0;z-index:2;border-radius:6px;overflow:hidden}
@@ -71,10 +72,12 @@ body.abierto .rayos{opacity:1}
 .sobre.abrir .solapa{transform:rotateX(180deg);z-index:0}
 .sobre.abrir .sello{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
 .sobre.abrir .carta{transform:translateY(-55%)}
-.flecha{position:absolute;right:4%;bottom:-27%;width:22%;color:#222;z-index:5;animation:entrar 1s 1.2s both}
-.p-clic{position:absolute;right:20px;bottom:calc(16vh + 50px);font-family:'PT Serif',serif;font-weight:700;font-size:15px;line-height:1.1;text-align:center;text-transform:uppercase;color:#111;animation:entrar 1s 1.3s both, pulso 2.2s 2.3s ease-in-out infinite}
-@keyframes pulso{50%{transform:scale(1.06)}}
-.p-bebe{position:absolute;left:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 3vh);width:40%;max-width:170px;animation:entrar 1s 1s both}
+.p-abajo{width:100%;display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:8px}
+.flecha{display:block;width:44px;height:min(64px,9vh);margin:0 auto 6px;color:#222;animation:subir 1.6s ease-in-out infinite}
+@keyframes subir{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.p-clic{display:flex;flex-direction:column;align-items:center;padding-bottom:2vh;font-family:'PT Serif',Georgia,serif;font-weight:700;font-size:clamp(15px,4.4vw,18px);line-height:1.3;letter-spacing:.04em;
+  text-align:center;text-transform:uppercase;color:#1a1a1a;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:entrar 1s 1.2s both}
+.p-bebe{width:100%;max-width:min(170px,22vh);animation:entrar 1s 1s both}
 @keyframes entrar{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 
 /* ---------- INVITACIÓN ---------- */
@@ -205,10 +208,8 @@ body.abierto .musica-flot{opacity:1;pointer-events:auto}
 <!-- ================= PORTADA ================= -->
 <div id="portada">
   <div class="portada-in">
-    <img class="esf" src="img/esfera.png" alt="" style="right:14px;top:3vh;--t:52px">
-    <img class="esf" src="img/esfera.png" alt="" style="left:12px;top:27vh;--t:44px;--d:-1.5s">
-    <img class="esf" src="img/esfera.png" alt="" style="right:20px;bottom:15vh;--t:56px;--d:-.7s">
-    <img class="esf" src="img/esfera.png" alt="" style="right:110px;bottom:5vh;--t:58px;--d:-2.2s">
+    <img class="esf" src="img/esfera.png" alt="" style="right:10px;top:2vh;--t:min(50px,7vh)">
+    <img class="esf" src="img/esfera.png" alt="" style="left:6px;top:24vh;--t:min(40px,6vh);--d:-1.5s">
 
     <div class="p-top">
       <img src="img/bebe-dormido.png" alt="">
@@ -223,14 +224,18 @@ body.abierto .musica-flot{opacity:1;pointer-events:auto}
         <span class="solapa"></span>
         <img class="sello" src="img/esfera.png" alt="">
       </button>
-      <svg class="flecha" viewBox="0 0 90 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="6 6" stroke-linecap="round" aria-hidden="true">
-        <path d="M40 116 C 70 90 78 60 52 54 C 28 48 22 74 46 74 C 72 74 70 30 26 18"/>
-        <path d="M34 8 L 24 18 L 36 24" stroke-dasharray="none"/>
-      </svg>
     </div>
 
-    <div class="p-clic">Dale clic<br>para ver la<br>invitación</div>
-    <img class="p-bebe" src="img/bebe-sentado.png" alt="">
+    <div class="p-abajo">
+      <img class="p-bebe" src="img/bebe-sentado.png" alt="">
+      <div class="p-clic" id="clicTexto" role="button" tabindex="0">
+        <svg class="flecha" viewBox="0 0 44 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 60 C 6 48 36 34 22 12" stroke-dasharray="5 6"/>
+          <path d="M13 19 L22 8 L31 19"/>
+        </svg>
+        <span>Dale clic<br>para ver la<br>invitación</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -418,6 +423,8 @@ $('#sobre').addEventListener('click', () => {
     window.scrollTo(0, 0);
   }, 1300);
 });
+
+$('#clicTexto').addEventListener('click', () => $('#sobre').click());
 
 // ----- Reproductor -----
 const icoPlay = '<path d="M8 5v14l11-7z"/>', icoPausa = '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';
