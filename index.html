@@ -9,8 +9,8 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Baby Shower de Jorge Evrián 🍼">
 <meta property="og:description" content="Sábado 14 de noviembre · 6:00 pm · Eventos Vivi. ¡Te esperamos!">
-<meta property="og:image" content="https://jonathan-win.github.io/baby-shower-jorge-thamir/img/compartir.jpg">
-<meta property="og:url" content="https://jonathan-win.github.io/baby-shower-jorge-thamir/">
+<meta property="og:image" content="https://jonathan-win.github.io/baby-shower-jorge-evrian/img/compartir.jpg">
+<meta property="og:url" content="https://jonathan-win.github.io/baby-shower-jorge-evrian/">
 <link rel="icon" href="img/esfera.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,9 +73,13 @@ body.abierto .rayos{opacity:1}
 .sobre.abrir .sello{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
 .sobre.abrir .carta{transform:translateY(-55%)}
 .p-abajo{width:100%;display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:8px}
-.flecha{display:block;width:44px;height:min(64px,9vh);margin:0 auto 6px;color:#222;animation:subir 1.6s ease-in-out infinite}
-@keyframes subir{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.p-clic{display:flex;flex-direction:column;align-items:center;padding-bottom:2vh;font-family:'PT Serif',Georgia,serif;font-weight:700;font-size:clamp(15px,4.4vw,18px);line-height:1.3;letter-spacing:.04em;
+.flecha-larga{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6;overflow:visible;opacity:0;transition:opacity .8s}
+.flecha-larga.lista{opacity:1}
+#portada.abriendo .flecha-larga{opacity:0;transition-duration:.3s}
+.flecha-larga path{fill:none;stroke:#222;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.flecha-larga .linea{stroke-dasharray:7 7;animation:fluir .9s linear infinite}
+@keyframes fluir{to{stroke-dashoffset:-14}}
+.p-clic{display:flex;flex-direction:column;align-items:center;padding-bottom:3vh;font-family:'PT Serif',Georgia,serif;font-weight:700;font-size:clamp(15px,4.4vw,18px);line-height:1.3;letter-spacing:.04em;
   text-align:center;text-transform:uppercase;color:#1a1a1a;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:entrar 1s 1.2s both}
 .p-bebe{width:100%;max-width:min(170px,22vh);animation:entrar 1s 1s both}
 @keyframes entrar{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
@@ -226,13 +230,11 @@ body.abierto .musica-flot{opacity:1;pointer-events:auto}
       </button>
     </div>
 
+    <svg class="flecha-larga" id="flechaLarga" aria-hidden="true"><path class="linea" id="flechaLinea"/><path id="flechaPunta"/></svg>
+
     <div class="p-abajo">
       <img class="p-bebe" src="img/bebe-sentado.png" alt="">
       <div class="p-clic" id="clicTexto" role="button" tabindex="0">
-        <svg class="flecha" viewBox="0 0 44 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M22 60 C 6 48 36 34 22 12" stroke-dasharray="5 6"/>
-          <path d="M13 19 L22 8 L31 19"/>
-        </svg>
         <span>Dale clic<br>para ver la<br>invitación</span>
       </div>
     </div>
@@ -425,6 +427,32 @@ $('#sobre').addEventListener('click', () => {
 });
 
 $('#clicTexto').addEventListener('click', () => $('#sobre').click());
+$('#sobre').addEventListener('click', () => $('#portada').classList.add('abriendo'));
+
+// ----- Flecha ondeada del texto a la esfera del sobre -----
+function trazarFlecha() {
+  const c = $('.portada-in').getBoundingClientRect();
+  const t = $('#clicTexto span').getBoundingClientRect();
+  const s = $('.sello').getBoundingClientRect();
+  const x0 = t.left + t.width / 2 - c.left, y0 = t.top - c.top - 10;
+  const cx = s.left + s.width / 2 - c.left, cy = s.top + s.height / 2 - c.top;
+  let dx = cx - x0, dy = cy - y0, L = Math.hypot(dx, dy);
+  const ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
+  const r = s.width / 2 + 10;                       // se detiene justo antes de la esfera
+  const x1 = cx - ux * r, y1 = cy - uy * r;
+  L = Math.hypot(x1 - x0, y1 - y0);
+  const amp = Math.min(20, L * .09), ondas = 3, N = 80, pts = [];
+  for (let i = 0; i <= N; i++) {
+    const f = i / N, off = amp * Math.sin(f * ondas * 2 * Math.PI) * Math.sin(Math.PI * f);
+    pts.push((x0 + (x1 - x0) * f + nx * off).toFixed(1) + ' ' + (y0 + (y1 - y0) * f + ny * off).toFixed(1));
+  }
+  $('#flechaLinea').setAttribute('d', 'M' + pts.join(' L'));
+  const p = (a, b) => (x1 - ux * a + nx * b).toFixed(1) + ' ' + (y1 - uy * a + ny * b).toFixed(1);
+  $('#flechaPunta').setAttribute('d', `M${p(13, 8)} L${x1.toFixed(1)} ${y1.toFixed(1)} L${p(13, -8)}`);
+  $('#flechaLarga').classList.add('lista');
+}
+document.fonts.ready.then(() => setTimeout(trazarFlecha, 2300));
+addEventListener('resize', () => { if (!$('#portada').classList.contains('fuera')) trazarFlecha(); });
 
 // ----- Reproductor -----
 const icoPlay = '<path d="M8 5v14l11-7z"/>', icoPausa = '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';
